@@ -1,112 +1,52 @@
----
-
-<div align="center">
-
-[![Sourcery](https://img.shields.io/badge/Sourcery-enabled-brightgreen)](https://sourcery.ai)
-[![Poetry](https://img.shields.io/badge/packaging-poetry-cyan.svg)](https://python-poetry.org/)
-[![GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)
-
-</div>
-
-<hr>
-
 # InstaBot
 
-Welcome to the Instagram Bot, a tool designed to automate various social media management tasks on Instagram. This bot is developed to assist social media managers, influencers, and businesses in efficiently handling their Instagram accounts.
+A Streamlit interface for a Selenium-based Instagram automation experiment. This repository is a fork of [TOBB ETÜ CS Community's Social Master](https://github.com/TOBB-ETU-CS-Community/Social-Master).
 
-[WebApp Link](https://insta-bot.streamlit.app/)
+## Implemented workflows
 
-## Features
+- Follow accounts from another account's followers list.
+- Like and comment on posts found through hashtags.
+- Unfollow accounts from the signed-in account's following list.
 
-Auto-Liking: Automatically like posts based on hashtags, location, or user feeds to boost engagement and visibility.
+These workflows interact with Instagram through a browser session. They depend on the page structure and selectors implemented in [`insta_bot/app.py`](insta_bot/app.py).
 
-Auto-Following: Follow users based on interests, followers, or interactions to grow your audience.
+## Local setup
 
-Auto-Unfollowing: Unfollow users who haven't followed you back or based on certain criteria.
+The original setup uses Python 3.10.10 and Poetry 1.4.0. The dependency constraints and lockfile are preserved.
 
-Auto-Commenting: Engage with users by leaving comments on their posts using customizable templates.
-
-
-## Table of Contents
-
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Usage](#usage)
-
-
-## Prerequisites
-
-Before setting up the project, ensure that you have the following prerequisites installed on your machine:
-
-- Python (version 3.10.10):
-(https://www.python.org/downloads/)
-- Poetry (version 1.4.0):
-(https://python-poetry.org/docs/#installation)
-
-
-## Installation
-
-1. Clone the project repository:
-
-```
-git clone https://github.com/TOBB-ETU-CS-Community/Insta-Bot.git
+```bash
+git clone https://github.com/ataturhan21/Insta-Bot.git
+cd Insta-Bot
+poetry install --no-root
+poetry run streamlit run "insta_bot/app.py"
 ```
 
-2. Navigate to the project directory:
+Run from the repository root so the `static/` images resolve. On Windows, use [`start.bat`](start.bat).
 
-```
-cd insta_bot
-```
+### Browser requirements
 
-3. Install project dependencies using Poetry:
+Install a Chrome or Chromium browser compatible with the selected ChromeDriver. The current implementation obtains its driver from `chromedriver_py.binary_path`, and the dependency file records the ChromeDriver 115 package line. [`packages.txt`](packages.txt) lists Chromium system packages for hosted Linux environments, but the Python code still controls which driver is launched.
 
-```
-poetry install
-```
+Review the browser/driver combination and selectors before starting a live session. A documentation update does not verify compatibility with the current Instagram website.
 
-This command will create a virtual environment and install all the necessary dependencies specified in the `pyproject.toml` file.
+## Operation
 
+1. Start the local UI and enter the account credentials in the sidebar. The password field is masked.
+2. Choose the browser options and select **Login Account**.
+3. Select **Follow**, **Like & Comment**, or **Unfollow** and configure its inputs.
+4. Use **Start the automation** to initiate the selected operation.
 
-## Usage
+A successful login and a button click can cause real account changes. The project does not include a dry-run mode; inspect the requested operation before starting it.
 
-1. Activate the virtual environment created by Poetry:
+## Project map
 
-```
-poetry shell
-```
-
-2. Run the project:
-
-```
-streamlit run "insta_bot/app.py"
-```
-
-## Contributing
-
-If you would like to contribute to this project, follow the guidelines below:
-
-1. Fork the repository and clone it locally.
-
-2. Create a new branch for your feature or bug fix:
-   ```
-   git checkout -b feature/your-feature
-   ```
-
-3. Make your changes and commit them with descriptive commit messages.
-
-4. Push your changes to your forked repository:
-   ```
-   git push origin feature/your-feature
-   ```
-
-5. Open a pull request in the original repository, describing your changes in detail.
+| Path | Purpose |
+| --- | --- |
+| [`insta_bot/app.py`](insta_bot/app.py) | Selenium page interactions, session state, and Streamlit controls |
+| [`insta_bot/modules/utils.py`](insta_bot/modules/utils.py) | Page setup and styling |
+| [`static/`](static/) | Background assets |
+| [`pyproject.toml`](pyproject.toml) | Python and browser-automation dependencies |
 
 ## License
 
-GPL v3
-
----
-
-Happy automating and managing your Instagram account!
+[GNU General Public License v3.0](LICENSE). Upstream attribution is preserved.
