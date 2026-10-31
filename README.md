@@ -40,13 +40,20 @@ A successful login and a button click can cause real account changes. The projec
 
 ## Project map
 
-| Path | Purpose |
-| --- | --- |
-| [`insta_bot/app.py`](insta_bot/app.py) | Selenium page interactions, session state, and Streamlit controls |
-| [`insta_bot/modules/utils.py`](insta_bot/modules/utils.py) | Page setup and styling |
-| [`static/`](static/) | Background assets |
-| [`pyproject.toml`](pyproject.toml) | Python and browser-automation dependencies |
+| Path                                                       | Purpose                                                           |
+| ---------------------------------------------------------- | ----------------------------------------------------------------- |
+| [`insta_bot/app.py`](insta_bot/app.py)                     | Selenium page interactions, session state, and Streamlit controls |
+| [`insta_bot/modules/utils.py`](insta_bot/modules/utils.py) | Page setup and styling                                            |
+| [`static/`](static/)                                       | Background assets                                                 |
+| [`pyproject.toml`](pyproject.toml)                         | Python and browser-automation dependencies                        |
 
 ## License
 
 [GNU General Public License v3.0](LICENSE). Upstream attribution is preserved.
+
+## Offline operation checks
+
+Run `poetry run python -m unittest discover -s tests -v`. The tests use fake
+page actions and do not log in or contact Instagram. Follow and unfollow execute
+1 requested batch and report its actual count; empty or partial batches are not
+retried automatically against a dialog that the action already closed.

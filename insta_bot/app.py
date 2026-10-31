@@ -4,6 +4,7 @@ import time
 
 import streamlit as st
 from chromedriver_py import binary_path
+from modules.operations import perform_batch
 from modules.utils import add_bg_from_local, set_page_config
 from PIL import Image
 from selenium import webdriver
@@ -470,13 +471,17 @@ def main():
                 )
                 with placeholder.container():
                     st.success("Followers dialog opened")
-                followed_number = 0
-                while followed_number < st.session_state.number_of_follow:
-                    followed_number += profile_page.follow_followers(
-                        count=st.session_state.number_of_follow
-                    )
+                followed_number = perform_batch(
+                    profile_page.follow_followers,
+                    st.session_state.number_of_follow,
+                )
                 with placeholder.container():
-                    st.success("Following operation completed")
+                    if followed_number == st.session_state.number_of_follow:
+                        st.success(f"Followed {followed_number} accounts")
+                    else:
+                        st.warning(
+                            f"Followed {followed_number} of {st.session_state.number_of_follow} requested accounts. The batch has stopped."
+                        )
             elif start and operation == "Like & Comment":
                 login_page = st.session_state.login_page
                 explore_page = login_page.go_to_explore_page()
@@ -490,13 +495,20 @@ def main():
                 )
                 with placeholder.container():
                     st.success("Following dialog opened")
-                unfollowed_number = 0
-                while unfollowed_number < st.session_state.number_of_unfollow:
-                    unfollowed_number += profile_page.unfollow_following(
-                        count=st.session_state.number_of_unfollow
-                    )
+                unfollowed_number = perform_batch(
+                    profile_page.unfollow_following,
+                    st.session_state.number_of_unfollow,
+                )
                 with placeholder.container():
-                    st.success("Unfollowing operation completed")
+                    if (
+                        unfollowed_number
+                        == st.session_state.number_of_unfollow
+                    ):
+                        st.success(f"Unfollowed {unfollowed_number} accounts")
+                    else:
+                        st.warning(
+                            f"Unfollowed {unfollowed_number} of {st.session_state.number_of_unfollow} requested accounts. The batch has stopped."
+                        )
         except Exception as e:
             with placeholder.container():
                 st.error("An exception occured. Please try again.")
